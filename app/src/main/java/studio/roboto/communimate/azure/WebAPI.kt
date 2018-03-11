@@ -11,29 +11,53 @@ import java.util.concurrent.TimeUnit
 class WebAPI {
     companion object {
 
-        var sWebAPI: IWebAPI? = null
+        var sKeyPhrasesAPI: IKeyPhrasesAPI? = null
 
-        val AZURE_WEB_API: String = ""
+        var sSearchAPI: ISearchAPI? = null
 
-        fun getAPI(): IWebAPI {
-            if (sWebAPI == null) {
-                initWebAPI()
+        fun getKeyPhrasesAPI(): IKeyPhrasesAPI {
+            if (sKeyPhrasesAPI == null) {
+                initKeyPhrasesAPI()
             }
-            return sWebAPI!!
+            return sKeyPhrasesAPI!!
         }
 
-        private fun initWebAPI() {
+        fun getSearchAPI(): ISearchAPI {
+            if (sSearchAPI == null) {
+                initSearchAPI()
+            }
+            return sSearchAPI!!
+        }
+
+        private fun initSearchAPI() {
             val interceptor: Interceptor = Interceptor { chain ->
                 var request: Request = chain.request()!!
                 request = request.newBuilder()
                         .addHeader("Content-type", "application/json")
+                        .addHeader("api-key", "***REMOVED***")
                         .build()
                 chain.proceed(request)
             }
-            sWebAPI = buildAPIAdapter(interceptor).create(IWebAPI::class.java)
+            sSearchAPI =
+                    buildAPIAdapter("***REMOVED***",
+                            interceptor).create(ISearchAPI::class.java)
         }
 
-        private fun buildAPIAdapter(interceptor: Interceptor): Retrofit {
+        private fun initKeyPhrasesAPI() {
+            val interceptor: Interceptor = Interceptor { chain ->
+                var request: Request = chain.request()!!
+                request = request.newBuilder()
+                        .addHeader("Content-type", "application/json")
+                        .addHeader("Ocp-Apim-Subscription-Key", "***REMOVED***")
+                        .build()
+                chain.proceed(request)
+            }
+            sKeyPhrasesAPI =
+                    buildAPIAdapter("***REMOVED***/",
+                            interceptor).create(IKeyPhrasesAPI::class.java)
+        }
+
+        private fun buildAPIAdapter(baseUrl: String, interceptor: Interceptor): Retrofit {
             val clientBuilder: OkHttpClient.Builder = OkHttpClient.Builder().addInterceptor(interceptor)
 
             val loggingIntercept: HttpLoggingInterceptor = HttpLoggingInterceptor()
@@ -47,7 +71,7 @@ class WebAPI {
 
             return Retrofit.Builder()
                     .client(client)
-                    .baseUrl(AZURE_WEB_API)
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
