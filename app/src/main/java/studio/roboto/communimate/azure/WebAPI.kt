@@ -36,12 +36,12 @@ class WebAPI {
                 var request: Request = chain.request()!!
                 request = request.newBuilder()
                         .addHeader("Content-type", "application/json")
-                        .addHeader("api-key", "***REMOVED***")
+                        .addHeader("api-key", "SANITIZED")
                         .build()
                 chain.proceed(request)
             }
             sSearchAPI =
-                    buildAPIAdapter("***REMOVED***",
+                    buildAPIAdapter("SANITIZED",
                             interceptor).create(ISearchAPI::class.java)
         }
 
@@ -50,12 +50,12 @@ class WebAPI {
                 var request: Request = chain.request()!!
                 request = request.newBuilder()
                         .addHeader("Content-type", "application/json")
-                        .addHeader("Ocp-Apim-Subscription-Key", "***REMOVED***")
+                        .addHeader("Ocp-Apim-Subscription-Key", "SANITIZED")
                         .build()
                 chain.proceed(request)
             }
             sKeyPhrasesAPI =
-                    buildAPIAdapter("***REMOVED***/",
+                        buildAPIAdapter("SANITIZED",
                             interceptor).create(IKeyPhrasesAPI::class.java)
         }
 

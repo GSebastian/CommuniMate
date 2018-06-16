@@ -21,8 +21,6 @@ class SaveHelperStateTask : AsyncTask<Unit, Unit, Unit> {
         this.helperUserId = helperUserId
         this.helperUserPhrase = helperUserPhrase
         this.listener = listener
-
-
     }
 
     override fun doInBackground(vararg p0: Unit?) {
